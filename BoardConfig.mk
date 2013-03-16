@@ -1,0 +1,107 @@
+LOCAL_PATH := device/samsung/iconvmu
+
+# inherit from the proprietary version
+-include vendor/samsung/iconvmu/BoardConfigVendor.mk
+
+#Assert 
+TARGET_OTA_ASSERT_DEVICE := iconvmu,Reverb
+
+TARGET_NO_BOOTLOADER := true
+TARGET_ARCH := arm
+TARGET_BOARD_PLATFORM := msm7X30
+TARGET_ARCH_VARIANT := armv7-a
+TARGET_CPU_ABI := armeabi-v7a
+TARGET_CPU_ABI2 := armeabi
+TARGET_BOOTLOADER_BOARD_NAME := msm7X30
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
+TARGET_BOOTANIMATION_PRELOAD := true
+TARGET_PROVIDES_INIT_RC := true
+
+TARGET_SPECIFIC_HEADER_PATH := device/samsung/iconvmu/include
+
+# Audio
+BOARD_USES_ALSA_AUDIO := true
+
+# Graphics
+BOARD_EGL_CFG := device/samsung/iconvmu/configs/egl.cfg
+BOARD_USES_ADRENO_200 := true
+COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60 -DQCOM_HARDWARE
+USE_OPENGL_RENDERER := true
+TARGET_USES_C2D_COMPOSITION := false
+TARGET_USES_SF_BYPASS := false
+TARGET_HAVE_BYPASS := false
+TARGET_USES_OVERLAY := true
+TARGET_QCOM_HDMI_OUT := true
+TARGET_GRALLOC_USES_ASHMEM := false
+TARGET_USES_GENLOCK := true
+
+TARGET_FORCE_CPU_UPLOAD := true
+
+BOARD_PREBUILT_LIBAUDIO := false
+BOARD_USES_QCOM_AUDIO_VOIPMUTE := true
+BOARD_USES_QCOM_AUDIO_RESETALL := true
+
+BOARD_VENDOR_QCOM_AMSS_VERSION := 1200
+
+BOARD_USES_QCOM_HARDWARE := true
+BOARD_USES_QCOM_LIBS := true
+BOARD_USES_QCOM_LIBRPC := true
+BOARD_USES_QCOM_GPS := true
+BOARD_USE_QCOM_PMEM := true
+
+BOARD_KERNEL_CMDLINE := console=null androidboot.hardware=qcom
+BOARD_KERNEL_BASE := 0x00400000
+BOARD_FORCE_RAMDISK_ADDRESS := 0x01700000
+BOARD_KERNEL_PAGESIZE := 2048
+
+# TARGET_PREBUILT_KERNEL := device/samsung/iconvmu/kernel
+TARGET_KERNEL_CONFIG := icon00_defconfig
+TARGET_KERNEL_SOURCE := kernel/samsung/iconvmu/
+
+# fix this up by examining /proc/mtd on a running device
+BOARD_BOOTIMAGE_PARTITION_SIZE := 0x105c0000
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x105c0000
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 419430400
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 36831232
+BOARD_FLASH_BLOCK_SIZE := 131072
+
+TARGET_SCREEN_HEIGHT := 800
+TARGET_SCREEN_WIDTH := 480
+
+BOARD_HAS_NO_MISC_PARTITION := true
+BOARD_HAS_NO_SELECT_BUTTON := true
+
+# Use this flag if the board has a ext4 partition larger than 2gb
+BOARD_HAS_LARGE_FILESYSTEM := true
+TARGET_RECOVERY_FSTAB := device/samsung/iconvmu/recovery.fstab
+TARGET_USERIMAGES_USE_EXT4 := true
+
+# Wifi
+BOARD_WLAN_DEVICE := bcmdhd
+BOARD_WLAN_DEVICE_REV := bcm4330
+WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_WPA_SUPPLICANT_DRIVER := NL80211
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
+BOARD_HOSTAPD_DRIVER := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd
+WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/dhd.ko"
+WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/dhd/parameters/firmware_path"
+WIFI_DRIVER_FW_PATH_STA := "/system/etc/wifi/bcmdhd_sta.bin"
+WIFI_DRIVER_FW_PATH_AP := "/system/etc/wifi/bcmdhd_apsta.bin"
+WIFI_DRIVER_FW_PATH_P2P := "/system/etc/wifi/bcmdhd_p2p.bin"
+WIFI_DRIVER_MODULE_NAME := "dhd"
+WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/etc/wifi/bcmdhd_sta.bin nvram_path=/system/etc/wifi/nvram_net.txt"
+WIFI_BAND := 802_11_ABG
+BOARD_HAVE_BROADCOM_WIFI := true
+
+# Bluetooth
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_BLUETOOTH_BCM := true
+BOARD_HAVE_SAMSUNG_BLUETOOTH := true
+
+# copy all kernel modules under the "kernel/modules" directory to system/lib/modules
+PRODUCT_COPY_FILES += $(shell \
+	find device/samsung/iconvmu/kernel/modules -name '*.ko' 2> /dev/null \
+	| sed -r 's/^\/?(.*\/)([^/ ]+)$$/\1\2:system\/lib\/modules\/\2/' \
+	| tr '\n' ' ')
+
