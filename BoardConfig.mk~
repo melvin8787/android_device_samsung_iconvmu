@@ -17,7 +17,7 @@ TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 TARGET_BOOTANIMATION_PRELOAD := true
 TARGET_PROVIDES_INIT_RC := true
 
-BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/iconvmu/recovery/graphics.c
+BOARD_CUSTOM_GRAPHICS := device/samsung/iconvmu/recovery/graphics.c
 
 # Charging mode
 BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_charging_source

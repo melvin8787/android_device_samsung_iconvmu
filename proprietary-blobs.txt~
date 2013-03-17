@@ -25,7 +25,7 @@ bin/dexopt
 bin/df
 bin/dhcpcd
 bin/diag_uart_log
-#bin/dmesg
+bin/dmesg
 bin/dnsmasq
 bin/drmserver
 bin/dttexe
@@ -142,7 +142,7 @@ bin/surfaceflinger
 bin/sync
 bin/system_server
 bin/test_gemini
-#bin/thermald
+bin/thermald
 bin/top
 bin/touch
 bin/umount
