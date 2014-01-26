@@ -1,4 +1,4 @@
-$(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
+$(call inherit-product, frameworks/native/build/phone-hdpi-1024-dalvik-heap.mk)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
@@ -120,17 +120,17 @@ PRODUCT_COPY_FILES += \
     packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
     
 PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/root/init.qcom.sh:root/init.qcom.sh \
-	$(LOCAL_PATH)/root/init.rc:root/init.rc \
-	$(LOCAL_PATH)/root/init.qcom.rc:root/init.qcom.rc \
-	$(LOCAL_PATH)/root/init.bt.rc:root/init.bt.rc \
-	$(LOCAL_PATH)/root/init.qcom.usb.rc:root/init.qcom.usb.rc \
-	$(LOCAL_PATH)/root/init.qcom.usb.sh:root/init.qcom.usb.sh \
-	$(LOCAL_PATH)/root/init.sensor.rc:root/init.sensor.rc \
-	$(LOCAL_PATH)/root/init.qcom.ril.path.sh:root/init.qcom.ril.path.sh \
-	$(LOCAL_PATH)/root/fstab.qcom:root/fstab.qcom \
-	$(LOCAL_PATH)/root/init.target.rc:root/init.target.rc
-#	$(LOCAL_PATH)/root/init:root/init \
+	$(LOCAL_PATH)/ramdisk/init.qcom.sh:root/init.qcom.sh \
+	$(LOCAL_PATH)/ramdisk/init.rc:root/init.rc \
+	$(LOCAL_PATH)/ramdisk/init.qcom.rc:root/init.qcom.rc \
+	$(LOCAL_PATH)/ramdisk/init.bt.rc:root/init.bt.rc \
+	$(LOCAL_PATH)/ramdisk/init.qcom.usb.rc:root/init.qcom.usb.rc \
+	$(LOCAL_PATH)/ramdisk/init.qcom.usb.sh:root/init.qcom.usb.sh \
+	$(LOCAL_PATH)/ramdisk/init.sensor.rc:root/init.sensor.rc \
+	$(LOCAL_PATH)/ramdisk/init.qcom.ril.path.sh:root/init.qcom.ril.path.sh \
+	$(LOCAL_PATH)/ramdisk/fstab.qcom:root/fstab.qcom \
+	$(LOCAL_PATH)/ramdisk/init.target.rc:root/init.target.rc 
+#	$(LOCAL_PATH)/ramdisk/init:root/init \
 	
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/scripts/init.qcom.efs.sync.sh:system/etc/init.qcom.efs.sync.sh \
