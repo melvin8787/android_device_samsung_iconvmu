@@ -14,32 +14,32 @@ TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_BOOTLOADER_BOARD_NAME := msm7X30
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
-TARGET_BOOTANIMATION_PRELOAD := true
 TARGET_PROVIDES_INIT_RC := true
+TARGET_NO_INITLOGO := true
 
-BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/iconvmu/recovery/graphics.c
+# BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/iconvmu/recovery/graphics.c
 
 # Charging mode
 BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_charging_source
 BOARD_BATTERY_DEVICE_NAME := "battery"
 
-TARGET_SPECIFIC_HEADER_PATH := device/samsung/iconvmu/include
-
 # Audio
 BOARD_USES_ALSA_AUDIO := true
 
 # Graphics
+BOARD_EGL_NEEDS_LEGACY_FB := true
 BOARD_EGL_CFG := device/samsung/iconvmu/configs/egl.cfg
 BOARD_USES_ADRENO_200 := true
 COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60 -DQCOM_HARDWARE
 USE_OPENGL_RENDERER := true
-TARGET_USES_C2D_COMPOSITION := false
+TARGET_USES_C2D_COMPOSITION := true
 TARGET_USES_SF_BYPASS := false
 TARGET_HAVE_BYPASS := false
 TARGET_USES_OVERLAY := true
 TARGET_QCOM_HDMI_OUT := true
 TARGET_GRALLOC_USES_ASHMEM := false
 TARGET_USES_GENLOCK := true
+TARGET_NO_HW_VSYNC := false
 
 TARGET_FORCE_CPU_UPLOAD := true
 
@@ -60,9 +60,7 @@ BOARD_KERNEL_BASE := 0x00400000
 BOARD_FORCE_RAMDISK_ADDRESS := 0x01700000
 BOARD_KERNEL_PAGESIZE := 2048
 
-# TARGET_PREBUILT_KERNEL := device/samsung/iconvmu/kernel
-TARGET_KERNEL_CONFIG := icon00_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/iconvmu/
+TARGET_PREBUILT_KERNEL := device/samsung/iconvmu/kernel
 
 # fix this up by examining /proc/mtd on a running device
 BOARD_BOOTIMAGE_PARTITION_SIZE := 0x105c0000
@@ -111,3 +109,19 @@ PRODUCT_COPY_FILES += $(shell \
 	| sed -r 's/^\/?(.*\/)([^/ ]+)$$/\1\2:system\/lib\/modules\/\2/' \
 	| tr '\n' ' ')
 
+# twrp
+DEVICE_RESOLUTION := 480x800
+RECOVERY_SDCARD_ON_DATA := true
+TW_INTERNAL_STORAGE_PATH := "/data/media"
+TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
+TW_EXTERNAL_STORAGE_PATH := "/external_sd"
+TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
+TARGET_PREBUILT_RECOVERY_KERNEL := $(LOCAL_PATH)/kernel
+TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
+TW_BRIGHTNESS_PATH := /sys/devices/platform/msm_fb.196609/leds/lcd-backlight/brightness
+TW_MAX_BRIGHTNESS := 255
+
+#Bootanimation
+TARGET_BOOTANIMATION_PRELOAD := true
+TARGET_BOOTANIMATION_TEXTURE_CACHE := true
+TARGET_BOOTANIMATION_USE_RGB565 := true

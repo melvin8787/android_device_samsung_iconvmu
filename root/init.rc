@@ -4,7 +4,7 @@
 # This is a common source of Android security bugs.
 #
 
-import /init.qcom.rc
+import /init.${ro.hardware}.rc
 import /init.usb.rc
 import /init.trace.rc
 
@@ -30,8 +30,6 @@ loglevel 3
     export ANDROID_ROOT /system
     export ANDROID_ASSETS /system/app
     export ANDROID_DATA /data
-    export EXTERNAL_STORAGE /mnt/sdcard
-    export EXTERNAL_STORAGE2 /mnt/sdcard1
     export ASEC_MOUNTPOINT /mnt/asec
     export LOOP_MOUNTPOINT /mnt/obb
     export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar
@@ -44,32 +42,15 @@ loglevel 3
 # but someday that may change.
     symlink /system/vendor /vendor
 
-# create mountpoints
-     export SECONDARY_STORAGE /mnt/extSdCard:/mnt/UsbDriveA:/mnt/UsbDriveB:/mnt/UsbDriveC:/mnt/UsbDriveD:/mnt/UsbDriveE:/mnt/UsbDriveF
-    mkdir /mnt 0775 root system
-    mkdir /mnt/sdcard 0000 system system
-    mkdir /mnt/extSdCard 0000 system system
-    mkdir /mnt/UsbDriveA 0000 system system
-    mkdir /mnt/UsbDriveB 0000 system system
-    mkdir /mnt/UsbDriveC 0000 system system
-    mkdir /mnt/UsbDriveD 0000 system system
-    mkdir /mnt/UsbDriveE 0000 system system
-    mkdir /mnt/UsbDriveF 0000 system system
-
 # Create cgroup mount point for cpu accounting
     mkdir /acct
     mount cgroup none /acct cpuacct
     mkdir /acct/uid
 
-# Backwards Compat - XXX: Going away in G*
-    symlink /mnt/sdcard /sdcard
-
     mkdir /system
     mkdir /data 0771 system system
-    mkdir /cache 0770 system cache
+    mkdir /cache 0771 system cache
     mkdir /config 0500 root root
-    mkdir /efs 0771 system radio
-    mkdir /carrier 0771 system system
 
     # Directory for putting things only root should see.
     mkdir /mnt/secure 0700 root root
@@ -138,9 +119,7 @@ on fs
     mount yaffs2 mtd@system /system
     mount yaffs2 mtd@system /system ro remount
     mount yaffs2 mtd@userdata /data nosuid nodev
-    mount yaffs2 mtd@persist /persist nosuid nodev
     mount yaffs2 mtd@cache /cache nosuid nodev
-    mount yaffs2 mtd@persist /persist nosuid nodev
 
 on emmc-fs
 # mount mmc partitions
@@ -163,17 +142,17 @@ on emmc-fs
     mount ext4 /dev/block/mmcblk0p14 /efs nosuid nodev barrier=1
     chown radio system /efs
     chmod 0771 /efs
-	mkdir /efs/imei 0775
-	chown radio system /efs/imei
-	chown radio system /efs/imei/keystr
-	chmod 0775 /efs/imei
-	chmod 0775 /efs/imei/keystr
+        mkdir /efs/imei 0775
+        chown radio system /efs/imei
+        chown radio system /efs/imei/keystr
+        chmod 0775 /efs/imei
+        chmod 0775 /efs/imei/keystr
 
     wait /dev/block/mmcblk0p20
     exec sfsck /dev/block/mmcblk0p20 ext4
     mount ext4 /dev/block/mmcblk0p20 /carrier nosuid nodev barrier=1
     chown system system /carrier
-	chmod 0771 /carrier
+        chmod 0771 /carrier
 
 # ko files for exfat
     insmod /system/lib/modules/exfat_core.ko
@@ -273,110 +252,6 @@ on post-fs-data
     # Set indication (checked by vold) that we have finished this action
     #setprop vold.post_fs_data_done 1
 
-    # create directory for ril data
-    mkdir /data/misc/radio 0775 radio radio
-    mkdir /data/misc/radio/hatp 0775 radio system
-
-# permission for TZIC
-    chown system system /dev/tzic
-
-    # If there is no fs-post-data action in the init.<device>.rc file, you
-    # must uncomment this line, otherwise encrypted filesystems
-    # won't work.
-    # Set indication (checked by vold) that we have finished this action
-    #setprop vold.post_fs_data_done 1
-
-    chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
-    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
-    chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
-    chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
-
-    # sensor
-    chown system radio /sys/class/sensors/barometer_sensor/sea_level_pressure
-    chown system radio /sys/class/sensors/barometer_sensor/eeprom_check
-    chown system radio /sys/class/sensors/barometer_sensor/calibration
-    chown system radio /sys/class/sensors/accelerometer_sensor/calibration
-    chown system radio /sys/class/sensors/accelerometer_sensor/reactive_alert
-    chown system radio /sys/class/sensors/accelerometer_sensor/name
-    chown system radio /sys/class/sensors/accelerometer_sensor/raw_data
-    chown system radio /sys/class/sensors/accelerometer_sensor/vendor
-    chown system radio /sys/class/sensors/proximity_sensor/enable
-    chown system radio /sys/class/sensors/proximity_sensor/prox_avg
-    chown system radio /sys/class/sensors/proximity_sensor/prox_cal
-    chown system radio /sys/class/sensors/proximity_sensor/prox_offset_pass
-    chown system radio /sys/class/sensors/proximity_sensor/prox_thresh
-    chown system radio /sys/class/sensors/proximity_sensor/name
-    chown system radio /sys/class/sensors/proximity_sensor/raw_data
-    chown system radio /sys/class/sensors/proximity_sensor/state
-    chown system radio /sys/class/sensors/proximity_sensor/vendor
-    chown system radio /sys/class/sensors/light_sensor/name
-    chown system radio /sys/class/sensors/light_sensor/raw_data
-    chown system radio /sys/class/sensors/light_sensor/vendor
-    chown system radio /sys/class/sensors/magnetic_sensor/name
-    chown system radio /sys/class/sensors/magnetic_sensor/raw_data
-    chown system radio /sys/class/sensors/magnetic_sensor/vendor
-
-    #earjack
-		chown system radio /sys/class/audio/earjack/select_jack
-		chown media system /sys/class/audio/earjack/reselect_jack
-		chown system radio /sys/class/audio/earjack/key_state
-		chown system radio /sys/class/audio/earjack/state
-
-	#OTG Test
-	chown system radio /sys/class/host_notify/usb_otg/booster
-	chmod 0660 /sys/class/host_notify/usb_otg/booster
-
-	#Essential node for usbservice
-	mkdir /dev/bus/ 755 root root
-	mkdir /dev/bus/usb 755 root root
-
-# wifi
-    mkdir /efs/wifi 0775 system system
-    chown system system /efs/wifi/.mac.info
-    chmod 0664 /efs/wifi/.mac.info
-
-# Permission for fast dormacy for RIL
-    chown system radio /sys/devices/virtual/sec/bamdmux/waketime
-
-# for TRP/TIS
-    write /data/.psm.info 1
-    chown system root /data/.psm.info
-    chmod 0660 /data/.psm.info
-
-# Make param block device link for SysScope
-    symlink /dev/block/mmcblk0p16 /dev/block/param
-
-# fota
-    mkdir /data/fota_test 0775 system log
-    chown system log /data/fota_test
-    chmod 0775 /data/fota_test
-
-    mkdir /cache/fota 0770 system cache
-    chown system cache /cache/fota
-    chmod 0770 /cache/fota
-
-# icd
-    exec icd_check
-    chown system system /dev/icd
-    chmod 0644 /dev/icd
-    write /dev/icdr 0
-    chown system system /dev/icdr
-    chmod 0644 /dev/icdr
-
-# Permissions for Camera
-    chown system radio /sys/class/camera/rear/rear_camfw
-    chown system radio /sys/class/camera/rear/rear_camtype
-    chown system radio /sys/class/camera/rear/rear_flash
-    chown system radio /sys/class/camera/front/front_camfw
-    chown system radio /sys/class/camera/front/front_camtype
-    chown system radio /sys/class/flash/flash/flash_power
-
-    chown system system /sys/class/sec/led/led_r
-    chown system system /sys/class/sec/led/led_g
-    chown system system /sys/class/sec/led/led_b
-    chown system system /sys/class/sec/led/led_pattern
-    chown system system /sys/class/sec/led/led_blink
-
 # Include extra init file
     import /init.cm.rc
 
@@ -409,7 +284,8 @@ on boot
     chown radio system /sys/android_power/acquire_full_wake_lock
     chown radio system /sys/android_power/acquire_partial_wake_lock
     chown radio system /sys/android_power/release_wake_lock
-    chown radio system /sys/power/state
+    chown system system /sys/power/state
+    chown system system /sys/power/wakeup_count
     chown radio system /sys/power/wake_lock
     chown radio system /sys/power/wake_unlock
     chmod 0660 /sys/power/state
@@ -466,71 +342,6 @@ on boot
     chown system system /sys/kernel/ipv4/tcp_rmem_def
     chown system system /sys/kernel/ipv4/tcp_rmem_max
     chown root radio /proc/cmdline
-    chown radio system /sys/class/sec/sec_touchkey/touch_sensitivity
-    chown radio system /sys/class/sec/sec_touchkey/touchkey_firm_update
-    chown radio system /sys/class/sec/sec_touchscreen/set_tsp_for_inputmethod
-    chown system radio /sys/class/sec/tsp_noise_test/disp_all_deltadata
-    chown system radio /sys/class/sec/tsp_noise_test/disp_all_refdata
-    chown system radio /sys/class/sec/tsp/cmd
-    chown radio system /sys/class/lcd/panel/power_reduce
-    chown radio system /sys/class/lcd/panel/gamma_mode
-    chown system radio /sys/class/sec/switch/reset_switch
-
-    # SAMSUNG CMC624
-    chown system system  /sys/class/mdnie/mdnie/lcdtype
-    chown system system  /sys/class/mdnie/mdnie/lcd_power
-    chown system media_rw /sys/class/mdnie/mdnie/scenario
-    chown system system /sys/class/mdnie/mdnie/tuning
-    chown system media_rw /sys/class/mdnie/mdnie/outdoor
-    chown system system  /sys/class/mdnie/mdnie/mdnie_temp
-    chown system system /sys/class/mdnie/mdnie/mode
-	chown system system /sys/class/mdnie/mdnie/negative
-	chown system system /sys/class/mdnie/mdnie/cabc
-
-# permissions for NFC
-    setprop ro.nfc.port "I2C"
-    chmod 0600 /dev/pn544
-    chown nfc nfc /dev/pn544
-
-# permission for CHARGING
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/fg_soc
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_reset_soc
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_vol
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_temp_check
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_full_check
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_charging_source
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/auth
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_vf_adc
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/chg_current_adc
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_temp_adc
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_type
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/chargingblock_clear
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_slate_mode
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/batt_temp_degc
-    chown system radio /sys/devices/platform/samsung-battery/power_supply/battery/off_backlight
-    chown system radio /sys/class/power_supply/battery/factory_mode
-
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/call
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/video
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/music
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/browser
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/hotspot
-   chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/camera
-   chown system radio /sys/class/power_supply/battery/talk_wcdma
-   chown system radio /sys/class/power_supply/battery/talk_gsm
-   chown system radio /sys/class/power_supply/battery/call
-   chown system radio /sys/class/power_supply/battery/data_call
-   chown gps system /sys/class/power_supply/battery/gps
-   chown system radio /sys/class/power_supply/battery/wifi
-   chown system radio /sys/class/power_supply/battery/lte
-
-# permissions for Audio Tuning app
-    chmod 1666 /data/system/databases/Volume.db
-
-# create data/gps for GPS daemon
-    mkdir /data/gps 0771 gps system
-    chown gps system /data/gps
-
 
 # Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
@@ -546,33 +357,6 @@ on boot
     setprop net.tcp.buffersize.gprs    4096,8760,11680,4096,8760,11680
     setprop net.tcp.buffersize.evdo    4096,87380,563200,4096,16384,262144
     setprop net.tcp.buffersize.evdo_b  4096,87380,704512,4096,16384,262144
-# klaatu tdmb ownership
-    chown system system /dev/tdmb
-    chmod 0660 /dev/tdmb
-
-# Assign TCP buffer thresholds to be ceiling value of technology maximums
-# Increased technology maximums should be reflected here.
-    write /proc/sys/net/core/rmem_max  3461120
-    write /proc/sys/net/core/wmem_max  3461120
-
-# create the log file system
-    mkdir /data/log 0775 system log
-    chown system log /data/log
-
-    chmod 0775 /data/log
-    chmod 0775 /data/anr
-
-#panorama directory creation
-    mkdir /data/pxtmpdir 0775
-    chown system system /data/pxtmpdir
-    chmod 0775 /data/pxtmpdir
-
-# Vibetonz
-    chmod 0660 /dev/tspdrv
-    chown root shell /dev/tspdrv
-
-# volume up/down key
-	chown radio system /sys/class/sec/sec_key/wakeup_keys
 
 # Set this property so surfaceflinger is not started by system_init
     setprop system_init.startsurfaceflinger 0

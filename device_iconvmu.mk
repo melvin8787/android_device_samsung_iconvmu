@@ -129,9 +129,7 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/root/init.sensor.rc:root/init.sensor.rc \
 	$(LOCAL_PATH)/root/init.qcom.ril.path.sh:root/init.qcom.ril.path.sh \
 	$(LOCAL_PATH)/root/fstab.qcom:root/fstab.qcom \
-	$(LOCAL_PATH)/root/init.target.rc:root/init.target.rc \
-	$(LOCAL_PATH)/root/ueventd.rc:root/ueventd.rc \
-	$(LOCAL_PATH)/root/initlogo.rle:root/initlogo.rle
+	$(LOCAL_PATH)/root/init.target.rc:root/init.target.rc
 #	$(LOCAL_PATH)/root/init:root/init \
 	
 PRODUCT_COPY_FILES += \
