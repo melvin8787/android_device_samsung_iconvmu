@@ -14,7 +14,7 @@ $ repo sync <- this will take awhile the source is ~10GB
 
 then
 
-$ cd .repo/local_manifests && cd .repo/local_manifests && wget https://raw2.github.com/dark-samus/android/Jellybean/local_manifest.xml
+$ cd .repo/local_manifests && wget https://raw2.github.com/dark-samus/android/Jellybean/local_manifest.xml && cd ../..
 
 $ . build/envsetup.sh
 
