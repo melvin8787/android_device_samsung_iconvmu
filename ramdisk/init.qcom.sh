@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+# Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -26,6 +26,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+target=`getprop ro.board.platform`
+
 #
 # Function to start sensors for DSPS enabled platforms
 #
@@ -33,10 +35,11 @@ start_sensors()
 {
     mkdir -p /data/system/sensors
     touch /data/system/sensors/settings
-    chmod 665 /data/system/sensors
+    chmod 775 /data/system/sensors
+    chmod 664 /data/system/sensors/settings
 
-    mkdir -p /efs/sensors
-    chmod 775 /efs/sensors
+    mkdir -p /data/misc/sensors
+    chmod 775 /data/misc/sensors
 
     if [ ! -s /data/system/sensors/settings ]; then
         # If the settings file is empty, enable sensors HAL
@@ -46,32 +49,17 @@ start_sensors()
     start sensors
 }
 
-# start ril-daemon only for targets on which radio is present
-#
+start_battery_monitor()
+{
+	chown root.system /sys/module/pm8921_bms/parameters/*
+	chmod 0660 /sys/module/pm8921_bms/parameters/*
+	mkdir -p /data/bms
+	chown root.system /data/bms
+	chmod 0770 /data/bms
+	start battery_monitor
+}
+
 baseband=`getprop ro.baseband`
-multirild=`getprop ro.multi.rild`
-dsds=`getprop persist.dsds.enabled`
-netmgr=`getprop ro.use_data_netmgrd`
-case "$baseband" in
-    "msm" | "csfb" | "svlte2a" | "mdm" | "unknown")
-#    start ril-daemon
-#    start qmuxd
-#    case "$baseband" in
-#        "svlte2a" | "csfb")
-#        start qmiproxy
-#    esac
-#    case "$multirild" in
-#        "true")
-#         case "$dsds" in
-#             "true")
-#             start ril-daemon1
-#         esac
-#    esac
-    case "$netmgr" in
-        "true")
-        start netmgrd
-    esac
-esac
 
 #
 # Suppress default route installation during RA for IPV6; user space will take
@@ -85,7 +73,6 @@ done
 #
 # Start gpsone_daemon for SVLTE Type I & II devices
 #
-target=`getprop ro.board.platform`
 case "$target" in
         "msm7630_fusion")
         start gpsone_daemon
@@ -96,12 +83,19 @@ case "$baseband" in
         start bridgemgrd
 esac
 case "$target" in
-        "msm7630_surf" | "msm8660" | "msm8960" | jaguar* | m2*)
+        "msm7630_surf" | "msm8660" | "msm8960")
         start quipc_igsn
 esac
 case "$target" in
-        "msm7630_surf" | "msm8660" | "msm8960" | jaguar* | m2*)
+        "msm7630_surf" | "msm8660" | "msm8960")
         start quipc_main
+esac
+
+case "$target" in
+        "msm8960")
+        start location_mq
+        start xtwifi_inet
+        start xtwifi_client
 esac
 
 case "$target" in
@@ -120,10 +114,11 @@ case "$target" in
                 start profiler_daemon;;
         esac
         ;;
-    "msm8960" | jaguar* | m2*)
+    "msm8960")
+        start_sensors
         case "$baseband" in
             "msm")
-                start_sensors;;
+		start_battery_monitor;;
         esac
 
         platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`

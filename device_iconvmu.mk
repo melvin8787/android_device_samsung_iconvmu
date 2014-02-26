@@ -1,5 +1,4 @@
-$(call inherit-product, 
-frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
+$(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
@@ -122,16 +121,14 @@ PRODUCT_COPY_FILES += \
     
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/ramdisk/init.qcom.sh:root/init.qcom.sh \
-	$(LOCAL_PATH)/ramdisk/init.rc:root/init.rc \
-	$(LOCAL_PATH)/ramdisk/init.qcom.rc:root/init.qcom.rc \
 	$(LOCAL_PATH)/ramdisk/init.bt.rc:root/init.bt.rc \
 	$(LOCAL_PATH)/ramdisk/init.qcom.usb.rc:root/init.qcom.usb.rc \
 	$(LOCAL_PATH)/ramdisk/init.qcom.usb.sh:root/init.qcom.usb.sh \
 	$(LOCAL_PATH)/ramdisk/init.sensor.rc:root/init.sensor.rc \
 	$(LOCAL_PATH)/ramdisk/init.qcom.ril.path.sh:root/init.qcom.ril.path.sh \
 	$(LOCAL_PATH)/ramdisk/fstab.qcom:root/fstab.qcom \
+	$(LOCAL_PATH)/ramdisk/default.prop:root/default.prop \
 	$(LOCAL_PATH)/ramdisk/init.target.rc:root/init.target.rc 
-#	$(LOCAL_PATH)/ramdisk/init:root/init \
 	
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/scripts/init.qcom.efs.sync.sh:system/etc/init.qcom.efs.sync.sh \
@@ -182,7 +179,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Set default USB interface
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    persist.sys.usb.config=mtp
+    persist.sys.usb.config=mtp,adb
 
 ## CDMA Sprint stuffs
 PRODUCT_PROPERTY_OVERRIDES += \

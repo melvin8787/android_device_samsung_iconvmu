@@ -42,8 +42,42 @@ on boot
     write /sys/devices/i2c-0/0-0024/cyttsp_update_fw 1
     exec /system/bin/sh /init.qcom.ril.path.sh
 
-on emmc-fs
-    mount ext4 /dev/block/mmcblk0p12 /system ro remount barrier=1
+on fs
+    mount_all fstab.qcom
+
+    # Keeping following partitions outside fstab file. As user may not have
+    # these partition flashed on the device. Failure to mount any partition in fstab file
+    # results in failure to launch late-start class.
+
+    wait /dev/block/platform/msm_sdcc.2/by-num/p18
+    check_fs /dev/block/platform/msm_sdcc.2/by-num/p18 ext4
+    mount ext4 /dev/block/platform/msm_sdcc.2/by-num/p18 /cache nosuid nodev noatime noauto_da_alloc,discard,journal_async_commit,errors=panic
+
+    wait /dev/block/platform/msm_sdcc.2/by-num/p13
+    check_fs /dev/block/platform/msm_sdcc.2/by-num/p13 ext4
+    mount ext4 /dev/block/platform/msm_sdcc.2/by-num/p13 /persist nosuid nodev noatime noauto_da_alloc,discard,journal_async_commit,errors=panic
+
+    wait /dev/block/platform/msm_sdcc.2/by-num/p14
+    check_fs /dev/block/platform/msm_sdcc.2/by-num/p14 ext4
+    mount ext4 /dev/block/platform/msm_sdcc.2/by-num/p14 /efs nosuid nodev noatime noauto_da_alloc,discard,journal_async_commit,errors=panic
+    chown radio system /efs
+    chmod 0771 /efs
+
+    wait /dev/block/platform/msm_sdcc.2/by-num/p20
+    check_fs /dev/block/platform/msm_sdcc.2/by-num/p20 ext4
+    mount ext4 /dev/block/platform/msm_sdcc.2/by-num/p20 /carrier nosuid nodev noatime noauto_da_alloc,discard,journal_async_commit,errors=panic
+    chown system system /carrier
+    chmod 0771 /carrier
+
+
+# mount mtd partitions
+# Mount /system rw first to give the filesystem a chance to save a checkpoint
+    mount yaffs2 mtd@system /system
+    mount yaffs2 mtd@system /system ro remount
+    mount yaffs2 mtd@userdata /data nosuid nodev
+    mount yaffs2 mtd@persist /persist nosuid nodev
+    mount yaffs2 mtd@cache /cache nosuid nodev
+    mount yaffs2 mtd@persist /persist nosuid nodev
 
 on property:hw.keyboard.disable=1
     write  /sys/bus/platform/devices/pm8058-keypad/disable_kp 1
