@@ -123,7 +123,7 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/ramdisk/init.qcom.sh:root/init.qcom.sh \
 	$(LOCAL_PATH)/ramdisk/init.qcom.rc:root/init.qcom.rc \
 	$(LOCAL_PATH)/ramdisk/init.carrier.rc:root/init.carrier.rc \
-	$(LOCAL_PATH)/ramdisk/init.qcom.lpm_boot.sh:root/init.qcom.lpb_boot.sh \
+	$(LOCAL_PATH)/ramdisk/init.qcom.lpm_boot.sh \
 	$(LOCAL_PATH)/ramdisk/init.bt.rc:root/init.bt.rc \
 	$(LOCAL_PATH)/ramdisk/init.qcom.usb.rc:root/init.qcom.usb.rc \
 	$(LOCAL_PATH)/ramdisk/init.qcom.usb.sh:root/init.qcom.usb.sh \

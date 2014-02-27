@@ -148,9 +148,6 @@ on boot
     # an ack packet comes out of order
     write /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal 1
 
-on fs	
-	mount_all fstab.qcom
-
 on emmc-fs
 # mount mmc partitions
     wait /dev/block/mmcblk0p17
